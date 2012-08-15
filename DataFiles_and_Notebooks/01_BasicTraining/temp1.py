@@ -1,3 +1,8 @@
+###  PYTHON BOOT CAMP EXAMPLE; 
+###  created by Josh Bloom at UC Berkeley, 2012 (ucbpythonclass+bootcamp@gmail.com)
+###  all rights reserved 2012 (c)
+###  https://github.com/profjsb/python-bootcamp
+
 # set some initial variables. Set the initial temperature low
 faren = -1000
 
@@ -28,6 +33,3 @@ else:
      # we got here because it's hot
      print "it's hot here, man."
 
-
-###  PYTHON BOOT CAMP EXAMPLE; 
-###  created by Josh Bloom at UC Berkeley, 2010 (ucbpythonclass+bootcamp@gmail.com)
