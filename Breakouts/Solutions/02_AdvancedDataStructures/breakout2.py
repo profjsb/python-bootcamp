@@ -12,7 +12,7 @@ flights = [("Southwest",145,"DCA",1,6.00),("United",31,"IAD",1,7.1),("United",30
            ("SpamAir",1,"AUM",42,14.4)]
 
 flights.sort()
-print "Flight    \tDestination\tGate\tTime"
+print "Flight    \tDestination\t\tGate\tTime"
 print "-"*50
 for f in flights:
     dest = airports[f[2]]
@@ -24,7 +24,7 @@ for f in flights:
 # learn later
 time_ordered = [flights[0]]
 for f in flights[1:]:
-    ## does it below in the beginning
+    ## does it belong in the beginning
     if f[4] < time_ordered[0][4]:
         time_ordered.insert(0,f)
         continue
@@ -38,7 +38,7 @@ for f in flights[1:]:
             time_ordered.insert(i+1,f)
             break
 
-print "Flight    \tDestination\tGate\tTime"
+print "Flight    \tDestination\t\tGate\tTime"
 print "-"*50
 for f in time_ordered:
     dest = airports[f[2]]
