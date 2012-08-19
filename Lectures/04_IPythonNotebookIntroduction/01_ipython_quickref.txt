@@ -1,0 +1,21 @@
+IPython: What is it?
+--------------------
+- python shell on steroids
+- can do everything you can do in plain python shell
+- In[] and Out[] objects to help you manage intermediate inputs and results
+- shell integration (call arbitrary commands)
+- Introspection (easier docstring lookup)
+- Tab completion
+- non-blocking plotting (show an example of pylab mode at work)
+- cross-session command line history (up-arrow doesn't work in plain python)
+- interactive debugging
+
+
+
+IPython Quick Reference
+-----------------------
+
+most of these are documented in the %quickref magic
+In [1]: %quickref
+
+- go over ipython-tutor.pdf / ipython-tutor.ipynb
