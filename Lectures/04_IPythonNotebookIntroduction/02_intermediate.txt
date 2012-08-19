@@ -1,0 +1,10 @@
+Intermediate Topics (beyond basics)
+-----------------------------------
+
+- configuration file options
+    - example: tab-completion
+- pylab mode (no need anymore)
+- doctest mode
+- debuging (toggling on and off)
+- timeit magic
+- %paste magic
