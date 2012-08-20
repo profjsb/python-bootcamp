@@ -5,7 +5,7 @@
 
 import datetime
 
-born = datetime.datetime(1974,6,8,13,2,2)
+born = datetime.datetime(1985,9,11,0,0,0)
 now  = datetime.datetime.now()     # note... .utcnow() gives the universal time, .now()
                                    #   gives the local time. We're ignoring timezone stuff here.
                                    
