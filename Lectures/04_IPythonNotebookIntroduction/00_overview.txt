@@ -1,5 +1,6 @@
+=========================
 The Many Faces of IPython
--------------------------
+=========================
 
 (command line invocation)
 
