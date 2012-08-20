@@ -1,0 +1,31 @@
+Who am I?
+=========
+
+Paul Ivanov
+pi@berkeley...
+http://pirsquared.org
+
+BS  in Computer Science (UC Davis)    2002-2005
+PhD in   Vision Science (UC Berkeley) 2006-
+
+--------
+Project
+    Number of commits (git shortlog -sn |  grep Ivanov)
+    First commit (git log --reverse | grep Ivanov -C5 | grep Date)
+--------
+
+scipy                matplotlib
+    2	commits      23	commits
+    Mon Nov 3 2008       Wed Jan 14 2009
+
+numpy                nitime
+    2	commits      87	commits
+    Tue Dec 22 2009      Mon Nov 23 2009
+
+ipython              vim-ipython
+    71	commits      71	commits
+    Thu Jul 15 2010      Thu Jul 28 2011
+
+
+
+

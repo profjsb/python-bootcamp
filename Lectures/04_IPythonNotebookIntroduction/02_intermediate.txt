@@ -1,10 +1,21 @@
+===================================
 Intermediate Topics (beyond basics)
------------------------------------
+===================================
 
-- configuration file options
-    - example: tab-completion
-- pylab mode (no need anymore)
+- pylab mode (no need to pass this from command line anymore)
+
+- debuging (toggling on and off via 'pdb')
+
+- %timeit magic
+
 - doctest mode
-- debuging (toggling on and off)
-- timeit magic
+
 - %paste magic
+
+- go over organization on whiteboard (back to 00_overview.txt)
+
+
+Qt Console specific
+-------------------
+ctrl-. restart 
+
