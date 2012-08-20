@@ -4,9 +4,9 @@ Intermediate Topics (beyond basics)
 
 - pylab mode (no need to pass this from command line anymore)
 
-- debuging (toggling on and off via 'pdb')
+- %debug  (toggling on and off via 'pdb')
 
-- %timeit magic
+- %timeit magic (in breakout)
 
 - doctest mode
 
@@ -17,5 +17,5 @@ Intermediate Topics (beyond basics)
 
 Qt Console specific
 -------------------
-ctrl-. restart 
+ctrl-. restart
 
