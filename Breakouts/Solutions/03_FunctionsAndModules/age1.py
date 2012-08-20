@@ -20,6 +20,6 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         date_from_now(int(sys.argv[1]))
     elif len(sys.argv) == 4:
-        days_since_now(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[2]))
+        days_since_now(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]))
     else:
         print "dont know what to do with", repr(sys.argv[1:])
