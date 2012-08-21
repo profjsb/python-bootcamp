@@ -1,40 +1,49 @@
-###
-# Procedural approach
-import math
-def perimeter(polygon):
-    """Given a list of vector vertices (in proper order), 
-    returns the perimeter for the associated polygon."""
-    sum = 0
-    for i in range(len(polygon)):
-        vertex1 = polygon[i]
-        vertex2 = polygon[(i+1) % len(polygon)]
-        distance = math.sqrt(pow(vertex2[0]-vertex1[0],2) + \
-                             pow(vertex2[1]-vertex1[1],2))
-        sum += distance
-    return sum 
+import numpy as np
+from random import randint
 
-perimeter([[0,0],[1,0],[1,1],[0,1]])	# Returns 4.0
-perimeter([[0,-2],[1,1],[3,3],[5,1],[4,0],[4,-3]])
-# Returns 17.356451097651515
+def generate_function(X,Y, voc, max_try=1000000, max_chars=10):
+    ''' find the analytic form that describes Y on X '''
+    tries = []
+    for n in xrange(max_try):
+        ## make some random function using the vocabulary
+        thefunc = "".join([voc[randint(0,len(voc)-1)] for x in range(randint(1,max_chars))])
+        ## construct the python statement, declaring the lambda function and evaluating it on X
+        mylam = "y = lambda x: " + thefunc + "\n"
+        mylam += "rez = y(X)"
+        try:
+            ## this may be volitile so be warned!
+            ## Couch everything in error statements, and
+            ##  simply throw away functions that aren't reasonable
+            exec(mylam)
+        except:
+            continue
+        try: 
+            tries.append( ( (abs(rez - Y).sum()) ,thefunc))
+            if (abs(rez - Y)).sum() < 0.0001:
+                ## we got something really close
+                break
+        except:
+            pass
+        del rez
+        del y
+        
+    ### numpy arrays handle NaN and INF gracefully, so we put
+    ### answer into an array before sorting
+    a = np.array(tries,dtype=[('rez','f'),("func",'|S10')])
+    a.sort()
+    
+    if a[0]["rez"] < 0.001:
+        print "took us ntries = {0}, but we eventually found that '{1}' is functionally equivalent to f(X)".format(n,a[0]["func"])
+    else:
+        print "after ntries = {0}, we found that '{1}' is close to f(x) (metric = {2})".format(n,a[0]["func"],a[0]["rez"])
+    
+    return a[0]
+    
+    
+    
 
-###
-# Object-oriented approach
-class Polygon:
-    """A new class named Polygon."""
-    def __init__(self, vertices=[]):
-        self.vertices = vertices
-        print "(Creating an instance of the class Polygon)"
-    def perimeter(self):
-        sum = 0
-        for i in range(len(self.vertices)):
-            vertex1 = self.vertices[i]
-            vertex2 = self.vertices[(i+1) % len(self.vertices)]
-            distance = math.sqrt(pow(vertex2[0]-vertex1[0],2)+\
-                                 pow(vertex2[1]-vertex1[1],2))
-            sum += distance
-        return sum
+voc = ["x","x"," ","+","-","*","/","1","2","3"]
 
-a = Polygon([[0,-2],[1,1],[3,3],[5,1],[4,0],[4,-3]])
-a.perimeter()
-# Returns 17.356451097651515
-
+x_array       = np.arange(-3,3,0.4)
+real_function = x_array**2 + x_array
+generate_function(x_array, real_function, voc, 100)
