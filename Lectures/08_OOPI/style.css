@@ -46,7 +46,6 @@
   text-align: center;
   }
 
-
 .rendered_html h2
 { 
   color: #386BBC;
@@ -120,6 +119,28 @@
 .nb_link
 {
     padding-bottom: 0.5em;
+}
+
+.comment { color: green; display:inline; }
+
+.object
+{
+  font-family: Courier Bold;
+  font-size: 120%;
+  background-color: #89bAF3;
+  text-align: center;
+  width: 600px;
+  margin: 30px;
+}
+
+.instance
+{
+  font-family: Courier Bold;
+  font-size: 120%;
+  background-color: #f9bAF3;
+  text-align: center;
+  width: 600px;
+  margin: 30px;
 }
 
 </style>
