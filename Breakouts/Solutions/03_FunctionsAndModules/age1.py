@@ -16,7 +16,7 @@ def days_from_now(ndays):
   return "in " + str(ndays) + " days the date will be : " + str(new)
 
 def days_since(year, month, day): 
-  "Returns a string reporting the number of days since some time"
+  """Returns a string reporting the number of days since some time"""
   now = datetime.datetime.now()
   then = datetime.datetime(year, month, day)
   diff = now - then
