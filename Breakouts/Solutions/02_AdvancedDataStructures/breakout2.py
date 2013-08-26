@@ -3,20 +3,16 @@
 
 # <markdowncell>
 
-# 02_AdvancedDataStructures
-# =============
-# ### First, copy over the airport and flight information from airline.py. ###
+# <p class="title">Breakout 2 Solutions</p>
+# 
 
-# solutions to the breakout #2 (Day 1)
+# ### First, copy over the airport and flight information from [airline.py](https://raw.github.com/profjsb/python-bootcamp/master/DataFiles_and_Notebooks/02_AdvancedDataStructures/airline.py). ###
 
-
-# <codecell>
 
 airports = {"DCA": "Washington, D.C.", "IAD": "Dulles", "LHR": "London-Heathrow", \
             "SVO": "Moscow", "CDA": "Chicago-Midway", "SBA": "Santa Barbara", "LAX": "Los Angeles",\
             "JFK": "New York City", "MIA": "Miami", "AUM": "Austin, Minnesota"}
 
-# <codecell>
 
 # airline, number, heading to, gate, time (decimal hours) 
 flights = [("Southwest",145,"DCA",1,6.00),("United",31,"IAD",1,7.1),("United",302,"LHR",5,6.5),\
@@ -25,78 +21,90 @@ flights = [("Southwest",145,"DCA",1,6.00),("United",31,"IAD",1,7.1),("United",30
            ("American", 1,"JFK",12,11.3),("USAirways", 8,"MIA",20,13.1),("United",2032,"MIA",21,15.1),\
            ("SpamAir",1,"AUM",42,14.4)]
 
-# <markdowncell>
 
-# ### We can sort the flight information by airline by running a simple sort on the list. ###
-# Note that when printing we lookup the destination name by the airport code key in the airports dictionary.
+# Sort the list of flights.
+flights.sort() 
 
-# <codecell>
-
-flights.sort()
+# Print out the header. the \t character prints a tab.
 print "Flight    \tDestination\t\tGate\tTime"
-print "-"*53
-for f in flights:
-    dest = airports[f[2]]
-    dest += " "*(20 - len(dest))
-    print f[0] + " " + str(f[1]) + "\t" + dest + "\t" + str(f[3]) + "\t" + str(f[4])
+print "-"*53 #53 instances of the "-" character
 
-# <markdowncell>
+# Loop through each of the flight tuples in the sorted list
+# Recall that each tuple contains the elements: (airline, number, destination lookup code, gate, time)
+for flight in flights:
+    # Use the dest lookup code (3rd element of the flight tuple) to get the full destination string from the airports dict
+    dest = airports[flight[2]]
+    dest += " "*(20 - len(dest))  # add the appropriate amount of whitespace after the Destination string
+    # Print the nicely formatted string. Don't forget to convert int and float types to strings using str()
+    print flight[0] + " " + str(flight[1]) + "\t" + dest + "\t" + str(flight[3]) + "\t" + str(flight[4])
 
-# When we called flights.sort() we resorted the list based on the first element of each tuple (airline) and then, when multiple flights are operated by one ariline, by the flight number.
-
-# <markdowncell>
-
+# Sorting by Departure Time
 # ### Sorting the information by time requires a bit more coding. ###
-# We create a new time_ordered list and loop through the flights inspecting each flight for its time. We then insert the flight at the beginning of time_ordered, at the end of time_ordered, or in between two other elements within time_ordered. We determine where the current flight belongs by manually comparing the times of the flights already added to time_ordered.
-# This is really trivial (a one liner) with lambda functions, which you'll lear later. 
+# First, we create a new list, time_ordered_flights, which initially just contains the first element of the list flights.
 
-# <codecell>
 
-# note: this is a really trivial (one liner!) thing do with lambda functions, which you'll 
-# learn later
-time_ordered = [flights[0]]
-for f in flights[1:]:
-    ## does it belong in the beginning
-    if f[4] < time_ordered[0][4]:
-        time_ordered.insert(0,f)
+# Create a new list, time_ordered, which initially just contains the first element of the list flights
+time_ordered_flights = [flights[0]]
+
+print time_ordered_flights
+
+# We then loop through the remaining flights and insert it into the proper 
+# position in time_ordered_flights by comparing the time element in each flight 
+# tuple (at the fifth index position).
+# We determine where the current flight belongs by manually comparing the times 
+# of the flights  already added to time_ordered_flights.  (This is really 
+# trivial with lambda functions, which you'll learn later.)
+
+
+# Iterate through each of the remaining elements in flights to see where it 
+# should go in the sorted list
+for flight in flights[1:]:
+    # Does it belong in the beginning?
+    # is current flight's time less than the time in the first list element?
+    if flight[4] < time_ordered_flights[0][4]: 
+        # insert the flight tuple at position 0 in the list
+        time_ordered_flights.insert(0,flight)   
         continue
     ## ... or the end?
-    if f[4] > time_ordered[-1][4]:
-        time_ordered.append(f)
+    # is current flight's time greater than the time in the last list element?
+    if flight[4] > time_ordered_flights[-1][4]:
+        # append the flight tuple to the end of the list 
+        time_ordered_flights.append(flight) 
         continue
-    ## or is it in the middle
-    for i in range(len(time_ordered) - 1):
-        if f[4] >= time_ordered[i][4] and f[4] <= time_ordered[i+1][4]:
-            time_ordered.insert(i+1,f)
+    ## Or is it in the middle? 
+    # Loop through each element and see if the current flight is between two adjacent ones
+    ## note that range(N) returns a list [0, 1, ... , N-1] 
+    for i in range(len(time_ordered_flights) - 1): 
+        if flight[4] >= time_ordered_flights[i][4] and flight[4] <= time_ordered_flights[i+1][4]:
+            time_ordered_flights.insert(i+1,flight) # insert the flight tuple at position i+1 in the list
             break
 
-# <markdowncell>
-
-# The printing procedure is the same.
-
-# <codecell>
 
 print "Flight    \tDestination\t\tGate\tTime"
 print "-"*53
-for f in time_ordered:
-    dest = airports[f[2]]
+for flight in time_ordered_flights:
+    dest = airports[flight[2]]
     dest += " "*(20 - len(dest))
-    print f[0] + " " + str(f[1]) + "\t" + dest + "\t" + str(f[3]) + "\t" + str(f[4])  
+    print flight[0] + " " + str(flight[1]) + "\t" + dest + "\t" + str(flight[3]) + "\t" + str(flight[4])  
 
-# <markdowncell>
+
 
 # ### One line sorting solution. ###
 # We can use the operator.itemgetter() function as the key in sort and sort by the time (4th) element.
 
-# <codecell>
 
 import operator
 flights.sort(key=operator.itemgetter(4))
 print "Flight    \tDestination\t\tGate\tTime"
 print "-"*53
-for f in flights:
-    dest = airports[f[2]]
+for flight in flights:
+    dest = airports[flight[2]]
     dest += " "*(20 - len(dest))
-    print f[0] + " " + str(f[1]) + "\t" + dest + "\t" + str(f[3]) + "\t" + str(f[4])
+    print flight[0] + " " + str(flight[1]) + "\t" + dest + "\t" + str(flight[3]) + "\t" + str(flight[4])
 
-### created by Josh Bloom at UC Berkeley, 2012 (ucbpythonclass+bootcamp@gmail.com)
+# Alternate printing solution 
+
+print "%.20s %.20s %.6s %.5s" % ("Flight"+20*' ', "Destination"+20*' ', "Gate"+20*' ', "Time"+20*' ')
+print "-"*53
+for flight in flights:
+    print "%.20s %.20s %.6s %.5s" % (flight[0] + ' ' + str(flight[1])+20*' ', airports[flight[2]]+20*' ', str(flight[3])+20*' ', str(flight[4])+20*' ')
