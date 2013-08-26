@@ -1,4 +1,4 @@
-#!/usr/bin/env/python
+#!/usr/bin/env python
 """
   PYTHON BOOT CAMP BREAKOUT3 SOLUTION;
       created by Josh Bloom at UC Berkeley, 2010
