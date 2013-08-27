@@ -1,0 +1,173 @@
+Here are the shell commands that were used to go through the exercise:
+
+$ git checkout -b work
+[ Edit indict to add feature, test, "discover" FPR bug ;
+  edit bloom.py to fix bug, test, confirm bugfix ;
+  edit README to document the new feature and change the version to 2.0. ]
+$ git add bloom.py
+$ git commit -m "bloom: in retrospect, I distrust the spirit vision"
+$ git add indict
+$ git add -p README
+[ Only stage the documentation part of the changes ]
+$ git commit -m "indict: add a '-f' option to print out the false-positive rate" \
+         -m "Also document it in README."
+$ git commit -a -m "Bump the version to 2.0"
+$ git checkout master
+$ git merge work
+$ git tag v2.0
+
+The commits that were made are below:
+
+commit 66812117218588256fa0deca94ee104dfa04b7d3
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 19:08:11 2010 -0700
+
+    SOLUTION: add list of shell commands used to arrive here
+
+commit 5ed944b2220a20e01f4550a85231a95e4bd066bf
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 19:00:07 2010 -0700
+
+    Bump the version to 2.0.
+
+commit 3fb6342317fc60761994c7228dd4871a1dcbfbe4
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 18:59:51 2010 -0700
+
+    indict: add a '-f' option to print out the false-positive rate
+    
+    Also document it in README.
+
+commit e7fb3fd6318bc47b9eb56038a65845abf320447c
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 18:57:31 2010 -0700
+
+    bloom: in retrospect, I distrust the spirit vision
+
+commit 8b188ff7e323033350af4d2a9aff22d98e8fafb9
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 18:48:25 2010 -0700
+
+    INSTRUCTIONS: add some instructions for the breakout session
+
+commit cc42b1f9892ba524b2bf09a8d7aa143f1427ba21
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 17:53:08 2010 -0700
+
+    indict: add the "-s" option
+    
+    This option suppresses output for words that are definitely not
+    in the dictionary.
+
+commit 38c262413dab2aaf2d5d7a6e2f7e03755580f3bd
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 17:39:52 2010 -0700
+
+    dictbf.dat.gz: import the filter data into the repo
+    
+    This way people don't need to recreate the filter data themselves,
+    which can be quite time-consuming.
+
+commit 6a1a8c1c2b02a2c0e3bfd9c0c224348999999c69
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 17:38:41 2010 -0700
+
+    README: update for recent changes
+
+commit 3b7833528fb932a54ebad2b39b4f779a9c1524c3
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 17:16:28 2010 -0700
+
+    bloom,importdictdata: move the dictionary-loading stuff out of the generic BloomFilter class
+    
+    It didn't really belong there and since we need to pre-cache the filter data
+    anyway it's not any more useful to have it there.
+
+commit c95e7e65f5f84602ee748ae901a3d7d085e8eb64
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 16:57:56 2010 -0700
+
+    bloom: use "true" division in the module
+    
+    In Python 2.X, dividing two integers yields the integer floor of
+    the result by default: 1 / 2 = 0. Change the module to activate
+    "true" division, in which 1 / 2 = 0.5, by the use of a __future__
+    import. This only effects only place in the code where we had
+    to multiply some numbers by -1. to floatify them; there are other
+    places where we relied on the "classic" division behavior but
+    used the "//" operator which maintains that behavior even when
+    true division is activated. See PEP238 for more context.
+
+commit 5d6a3bb78769befaf85e36b8716f3b2b3b1e2b5f
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 16:26:18 2010 -0700
+
+    importdictdata,indict: gzip-compress the filter data file
+    
+    Space isn't a big deal, but Python makes it so easy to do, why not?
+
+commit e825de5bfbe7a917a612e89132fc99518cb09df7
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 17:32:27 2010 -0700
+
+    Pre-cache the filter data since it takes a long time to compute everything
+    
+    To accomplish this, we add a new tool, "importdictdata", which fills in the filter
+    and saves the state to disk. Then "indict" just loads the prefilled data, which
+    is much faster than recomputing it all from scratch.
+    
+    Now that this is the case, change the desired false-positive rate from 50% to 5%
+    when constructing the filter.
+
+commit 2f3774f2390a0990227bebd7cf037c587e4fb5a3
+Author: Peter Williams <peter@newton.cx>
+Date:   Sat Aug 21 17:25:51 2010 -0700
+
+    bloom: fix mistake in the name of the __setstate__ function
+    
+    (This was a real honest-to-god mistake! But if this weren't
+    for the demo I'd probably merge this commit into the previous
+    one using "git rebase -i HEAD~2".)
+
+commit 040c681b9c43a4e517e88f32ff479e2226734613
+Author: Peter Williams <peter@newton.cx>
+Date:   Sat Aug 21 17:17:04 2010 -0700
+
+    bloom: add code for serializing state
+
+commit 077ef67fae0d1e7c2af3f6284f255481a53128bc
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 17:26:40 2010 -0700
+
+    Bump the version to 1.0.
+
+commit d377994271e21828fad918bf0065e55699ebc81c
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 18:24:58 2010 -0700
+
+    bloom: make the FP rate math more explicit
+
+commit 90d761a8337b0dae19ff7e9c118c0d82c509609f
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 17:26:13 2010 -0700
+
+    Add a .gitignore file to clean up output of 'git status'
+
+commit f846ebf1a40833dc093ef86d2fcdda1c9edd9244
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 17:25:37 2010 -0700
+
+    README: add some documentation
+
+commit d28e5fddbc769c66850d3c46c6b9771e268bf720
+Author: Peter Williams <peter@newton.cx>
+Date:   Sun Aug 22 17:23:31 2010 -0700
+
+    indict: add program to check if words are in the dictionary
+
+commit d9510f063c63ad70ac696fc54fbcaa18f69287f0
+Author: Peter Williams <peter@newton.cx>
+Date:   Sat Aug 21 17:13:34 2010 -0700
+
+    Import my quickie Bloom filter implementation.
+
