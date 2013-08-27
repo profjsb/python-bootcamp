@@ -247,7 +247,7 @@ axes.unicode_minus  : False    # use unicode for the minus symbol
 
 ### TICKS
 # see http://matplotlib.org/api/axis_api.html#matplotlib.axis.Tick
-xtick.major.size     : 8      # major tick size in points
+xtick.major.size     : 7      # major tick size in points
 xtick.minor.size     : 4      # minor tick size in points
 xtick.major.width    : 1.0    # major tick width in points
 xtick.minor.width    : 1.0    # minor tick width in points
