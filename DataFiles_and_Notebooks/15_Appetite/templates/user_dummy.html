@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+<title>{{ username }} 's tweets</title>
+    <link rel="stylesheet" href="/static/components/jquery-ui/themes/smoothness/jquery-ui.min.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/style/style.min.css" type="text/css"/>
+</head>
+<div class='container' id='notebook-container'>
+    <div class='cell border-box-sizing selected' >
+
+        <div class="prompt"><a href="{{ user_url }}">{{ username }} </a></div>
+        {% for tweet in tweets %}
+        <div class='input_area' style='padding:20px'> 
+            {{ tweet }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
