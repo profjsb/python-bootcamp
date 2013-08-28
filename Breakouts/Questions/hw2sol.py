@@ -1,11 +1,32 @@
 
+"""
+This is a solution to the Homework #2 of the Python Bootcamp
+
+The basic idea is to create a simulation of the games Chutes and Ladders, 
+to gain some insight into how the game works and, more importantly,
+to exercise new-found skills in object oriented programming within Python.
+
+The setup for the homework is given here:
+ http://tinyurl.com/homework2-bootcamp
+
+Usage:
+  python hw2sol.py
+
+UC Berkeley 
+J. Bloom 2013 
+"""
 import random
 import numpy as np
+
+## here's a layout of the board
+## I just made this by hand looking at the picture of the board:
+##     http://i.imgur.com/Sshgk4X.jpg
 ## the key is the starting point, the value is the ending point
-board = {1: 38, 5: 14, 9: 31, 16: 6, 21: 42, 28: 84, 36: 44, 48: 26, 49: 11,
+board = {1: 38, 4: 14, 9: 31, 16: 6, 21: 42, 28: 84, 36: 44, 48: 26, 49: 11,
          51: 67, 56: 53, 62: 19, 64: 60, 71: 91, 80: 100, 87: 24, 93: 73, 95: 75, 98: 78}
 
 class Pawn(object):
+	""" representation of a player in the game."""
 
 	def __init__(self,run_at_start=False):
 		## start off at the beginning
@@ -19,6 +40,7 @@ class Pawn(object):
 			self.play_till_end()
 
 	def play_till_end(self):
+		""" keep throwing new random dice rolls until the player gets to 100 """
 
 		while not self.reached_end:
 			## throw a spin
@@ -32,6 +54,8 @@ class Pawn(object):
 				continue
 
 			self.loc += throw
+
+			# keep track of the path is took to get there
 			self.path.append(self.loc)
 
 			if board.has_key(self.loc):
@@ -48,22 +72,31 @@ class Pawn(object):
 				self.reached_end = True
 
 	def __str__(self):
+		""" make a nice pretty representation of the player attributes """
 		s = """n_throws = %i ; n_ladders = %i  ; n_chutes = %i 
 		       path = %s""" % (self.n_throws,self.n_ladders, self.n_chutes, str(self.path))
 		return s      
 
 class Game(object):
+	""" simulate a game between a certain number of players """
 
 	def __init__(self,n_players=2):
-
 		self.n_players = n_players
 		self.run()
 
 	def run(self):
+		""" actually run the Game, by making a new list of Pawns 
+			we play ALL Pawns to the end...this has the advantage of 
+			allowing us to run multiple simulations of Pawn movements
+			and keep track of 1st, 2nd, 3rd, ... place winners.
+		"""
+
 		self.pawns = [Pawn(run_at_start=True) for i in range(self.n_players)]
 		self.settle_winner()
 
 	def settle_winner(self):
+		""" go through the Game and figure out who won"""
+
 		throws = [x.n_throws for x in self.pawns]
 		self.min_throws, self.max_throws  = min(throws), max(throws)
 
@@ -76,7 +109,9 @@ class Game(object):
 		self.first_throw_length = [(x.path[0],x.n_throws) for x in self.pawns ]
 
 class Simulate(object):
-
+	""" Play multiple games and spit out some of the answers to the homework questions,
+	    basically high-level statistics
+	"""
 	def __init__(self,num_games = 1000, num_players = 4):
 		self.num_games = num_games
 		self.num_players = num_players
@@ -90,6 +125,9 @@ class Simulate(object):
 
 		self.first_turn_wins = []
 
+		# NB: I'm running these games in serial. Would be nice to make use of my
+		# multicore environment to do this instead. Or even a cluster. Soon....
+		# TODO: Parallelize me!
 		for i in range(self.num_games):
 			g = Game(n_players=self.num_players)
 
@@ -135,13 +173,6 @@ class Simulate(object):
 		s+= "  random expectation is %f\n" % (1.0/self.num_players)
 		return s
 
-s = Simulate(num_games =10000, num_players=4)
-s.run()
-print s
-s = Simulate(num_games =10000, num_players=2)
-s.run()
-print s
-
 def test_Pawn():
 	p = Pawn()
 	p.play_till_end()
@@ -152,5 +183,16 @@ def test_Game():
 	g.settle_winner()
 
 
+if __name__ == "__main__":
+	print "HW#2 solutions"
+	print "UC Berkeley Python Bootcamp 2013"
+
+	nsim = 10000
+	for n_players in [2,4]:
+		print "*"*60
+		print "Running a 10000 game simulation with {0} players".format(n_players)
+		s = Simulate(num_games =nsim, num_players=n_players)
+		s.run()
+		print s
 
 
