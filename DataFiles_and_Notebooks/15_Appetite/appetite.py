@@ -83,7 +83,7 @@ def email_cyclist(address, f_name, l_name, myemail=NothingToSeeHere.username):
     msg["Subject"] = "Let's go for a ride, %s" % f_name
 
     # Write the body, making sure all variables are defined.
-    msgstr = """Hey %s,
+    msgstr = r"""Hey %s,
 
     Wanna go for a bike ride later on today?
 
@@ -102,12 +102,12 @@ def email_cyclist(address, f_name, l_name, myemail=NothingToSeeHere.username):
     --------------.......J
     Paul Ivanov
     http://pirsquared.org
-    """ 
+    """  % f_name
     msg.attach(MIMEText(msgstr))
 
     # Configure the outgoing mail server
     log.info("sending out email") 
-    mailServer = smtplib.SMTP("smtp.gmail.com", 465)
+    mailServer = smtplib.SMTP("smtp.gmail.com", 587)
     mailServer.starttls()
     mailServer.login(myemail, NothingToSeeHere.password)
 
