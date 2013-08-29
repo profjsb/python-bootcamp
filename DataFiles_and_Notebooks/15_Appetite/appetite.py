@@ -1,43 +1,46 @@
 #! /usr/bin/env python
+# this file was originall written by Brad Cenko for 2012 UCB Python Bootcamp
+# modified and extended by Paul Ivanov for the 2013 UCB Python Bootcamp
 
-import sqlite3, os, urllib2, smtplib
-from lxml import etree
+import sqlite3, os, smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 import NothingToSeeHere # Email password stored in this (private) file
+from NothingToSeeHere import username as email_addr
 
 # Global variables
-MYSNURL = "http://astro.berkeley.edu/~cenko/public/BootCamp/SNeInfo.html"
-ASTROPEEPSDB = "/Users/cenko/BootCamp/2012B/appetite/astropeeps.sql"
+piDB = "piDB.sql"
 # Need to change this to a path you can write to
+
+import logging
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+log = logging.getLogger(__name__)
 
 ###########################################################################
 
-def create_astro_table(filename=ASTROPEEPSDB):
+def create_friends_table(filename=piDB):
 
-    """Creates sqlite database to store basic information on astronomy department"""
+    """Creates sqlite database to store basic information on my buddies"""
 
     conn = sqlite3.connect(filename)
     c = conn.cursor()
 
-    c.execute('''CREATE TABLE ASTROPEEPS (f_name text, l_name text,
+    c.execute('''CREATE TABLE CYCLISTS (f_name text, l_name text,
                email text, status text)''')
-    c.execute('''INSERT INTO ASTROPEEPS VALUES ("Josh", "Bloom",
-               "jbloom@astro.berkeley.edu", "Faculty")''')
-    c.execute('''INSERT INTO ASTROPEEPS VALUES ("Berian", "James",
-               "berian@astro.berkeley.edu", "Postdoc")''')
-    c.execute('''INSERT INTO ASTROPEEPS VALUES ("Joey", "Richards",
-               "joeyrichar@gmail.com", "Postdoc")''')
-    c.execute('''INSERT INTO ASTROPEEPS VALUES ("Adam", "Morgan",
-               "amorgan@astro.berkeley.edu", "Student")''')
-    c.execute('''INSERT INTO ASTROPEEPS VALUES ("Chris", "Klein",
-               "cklein@berkeley.edu", "Student")''')
-    c.execute('''INSERT INTO ASTROPEEPS VALUES ("Isaac", "Shivvers",
-               "ishivvers@berkeley.edu", "Student")''')
-    c.execute('''INSERT INTO ASTROPEEPS VALUES ("Dan", "Starr",
-               "dstarr@astro.berkeley.edu", "Staff")''')
-    c.execute('''INSERT INTO ASTROPEEPS VALUES ("Henrik", "Brink",
-               "henrikbrink@gmail.com", "Student")''')
+
+    ins_tpl= 'INSERT INTO CYCLISTS VALUES ("%s", "%s", "%s", "%s")'
+
+    l = []
+    l += [ins_tpl % ( "Paul", "Ivanov", email_addr, 'committed')]
+    l += [ins_tpl % ( "Dan", "Coates", email_addr, 'committed')]
+    l += [ins_tpl % ( "James", "Gao", email_addr, 'casual')]
+    l += [ins_tpl % ( "Sara", "Emery", email_addr, 'committed')]
+    l += [ins_tpl % ( "Jonathan", "Giffard", email_addr, 'weekender')]
+    l += [ins_tpl % ( "Janet", "Young", email_addr, 'weekender')]
+
+    for s in l:
+        print s
+        c.execute(s)
 
     conn.commit()
     c.close()
@@ -46,59 +49,29 @@ def create_astro_table(filename=ASTROPEEPSDB):
 
 ############################################################################
 
-def retrieve_random_gradstudent(filename=ASTROPEEPSDB, student="Student"):
+def retrieve_random_cyclist(filename=piDB, kind="committed"):
 
-    """Returns the name and email address of a random graduate student"""
+    """Returns the name and email address of a random cyclist"""
 
     conn = sqlite3.connect(filename)
     c = conn.cursor()
 
-    c.execute("SELECT f_name, l_name, email FROM ASTROPEEPS WHERE status" + \
-              " = '%s' ORDER BY RANDOM() LIMIT 1" % student)
+    c.execute("SELECT f_name, l_name, email FROM CYCLISTS WHERE status" + \
+              " = '%s' ORDER BY RANDOM() LIMIT 1" % kind)
     row = c.fetchall()
     
     conn.commit()
     c.close()
+    if len(row)== 0:
+        raise ValueError("There are no people who are '%s'" % kind ) 
 
     return [row[0][0], row[0][1], row[0][2]]
 
 ###########################################################################
 
-def retrieve_sn_info(sn_name, url=MYSNURL):
-
-    """Given the name of a supernova, retrieves the object's coordinates,
-    host galaxy, and type (if they exists) by reading through the provided
-    URL.  Otherwise returns a list of None."""
-
-    # Download the HTML from the SNe URL
-    flob = urllib2.urlopen(url)
-    s = flob.read()
-    flob.close()
-    html = etree.HTML(s)
-
-    # Find all lines following the <table> tag
-    rows = html.find('.//table')
-
-    # Loop over the table rows
-    for row in rows:
-
-        # Check if matches name given SN
-        if (sn_name == row[0].text):
-
-            # Get important info
-            coords = [row[1].text.replace(" ", ":"),
-                      row[2].text.replace(" ", ":")]
-            host = row[3].text
-            sntype = row[4].text
-            return [host, coords, sntype]
-
-    # If no match found, return a whole lot of nothing
-    return [None, None, None]
-
 ###############################################################################
 
-def email_student(address, f_name, l_name, sn_name, host, coords, sntype,
-                  myemail="bradcenko@gmail.com"):
+def email_cyclist(address, f_name, l_name, myemail=NothingToSeeHere.username):
 
     """Generate and send an email to address with a request to observe
     the given supernova."""
@@ -107,70 +80,62 @@ def email_student(address, f_name, l_name, sn_name, host, coords, sntype,
     msg = MIMEMultipart()
     msg["From"] = myemail
     msg["To"] = address
-    msg["Subject"] = "Observations of %s" % sn_name
+    msg["Subject"] = "Let's go for a ride, %s" % f_name
 
     # Write the body, making sure all variables are defined.
-    msgstr = "Hi %s %s,\n\n" % (f_name, l_name)
-    msgstr += "I just found out about %s, and it seems neat.  " % sn_name
-    if (host == None):
-        msgstr += "The host galaxy is unknown.  "
-    else:
-        msgstr += "The host galaxy is %s.  " % host
-    if (coords == None):
-        msgstr += "I do not know the coordinates.  "
-    else:
-        msgstr += "The location is: RA=%s; Dec=%s.  " % (coords[0], coords[1])
-    if (sntype == None):
-        msgstr += "I do not know the type.\n\n"
-    else:
-        msgstr += "The type is %s.\n\n" % sntype
-    msgstr += "Here's an image of the field: \n"
-    finder = "http://qmorgan.org.org/fc/fcserver.py?ra=%s&dec=%s&src_name=%s&cont_str=Contact:+Brad+Cenko+(bradcenko@gmail.com)" % (coords[0], coords[1], sn_name)
-    msgstr += finder + "\n\n"
-    msgstr += "Could you please arrange some new observations?  "
-    msgstr += "I am really busy drinking right now.\n\n"
-    msgstr += "Thanks,\nBrad"
+    msgstr = r"""Hey %s,
+
+    Wanna go for a bike ride later on today?
+
+    best,
+    pi
+    -- 
+                       _
+                      / \
+                    A*   \^   -
+                 ,./   _.`\\ / \
+                / ,--.S    \/   \
+               /  `"~,_     \    \
+         __o           ?
+       _ \<,_         /:\
+    --(_)/-(_)----.../ | \
+    --------------.......J
+    Paul Ivanov
+    http://pirsquared.org
+    """  % f_name
     msg.attach(MIMEText(msgstr))
 
     # Configure the outgoing mail server
+    log.info("sending out email") 
     mailServer = smtplib.SMTP("smtp.gmail.com", 587)
     mailServer.starttls()
-    mailServer.login(myemail, NothingToSeeHere.passwd)
+    mailServer.login(myemail, NothingToSeeHere.password)
 
     # Send the message
     mailServer.sendmail(myemail, address, msg.as_string())
     mailServer.close()
 
-    print "Finder: %s" % finder
     
     return
 
 ###############################################################################
     
-def do_science(sn_name, filename=ASTROPEEPSDB, url=MYSNURL,
-               myemail="bradcenko@gmail.com"):
-
-    """Script to do cutting edge science. Takes a supernova name, finds
-    some information about it on a webpage, picks a random graduate student,
+def go_cycling(filename=piDB, myemail=NothingToSeeHere.username):
+    """Script to go cycling with one of my cycling buddies.
+    Grabs
     and emails that student to request follow-up observations."""
 
     # See if the department database exists.  If not, create it.
     if not os.path.exists(filename):
-        create_astro_table(filename=filename)
+        create_friends_table(filename=filename)
 
     # Select a random graduate student to do our bidding
-    [f_name, l_name, address] = retrieve_random_gradstudent(filename=filename)
-
-    # Find out some information about the supernova
-    [host, coords, sntype] = retrieve_sn_info(sn_name, url=url)
+    [f_name, l_name, address] = retrieve_random_cyclist(filename=filename)
 
     # Email the student
-    email_student(address, f_name, l_name, sn_name, host, coords, sntype,
-                  myemail=myemail)
+    email_cyclist(address, f_name, l_name, myemail=myemail)
 
-    print "I emailed %s %s at %s about %s." % (f_name, l_name, address, sn_name)
-    
-    # Faculty job here I come!
-    return
+    print "I emailed %s %s at %s about going cycling." % (f_name, l_name,
+                                                          address)
 
 ###############################################################################
