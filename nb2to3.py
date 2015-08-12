@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-To run: python3 2to3_nb.py notebook-or-directory
+To run: python3 nb2to3.py notebook-or-directory
 """
 # Authors: Thomas Kluyver, Fernando Perez
 # See: https://gist.github.com/takluyver/c8839593c615bb2f6e80
