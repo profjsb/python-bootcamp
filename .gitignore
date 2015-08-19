@@ -26,3 +26,5 @@
 *.mtc
 *.mtc0
 .ipynb_checkpoints
+*~
+\#*
