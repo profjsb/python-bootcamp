@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 """
-  PYTHON BOOT CAMP BREAKOUT3 SOLUTION;
-      created by Josh Bloom at UC Berkeley, 2010
-      (ucbpythonclass+bootcamp@gmail.com)
-      modified by Katy Huff at UC Berkeley, 2013
+  PYTHON BOOT CAMP BREAKOUT3 SOLUTION
 """
 
 # First, we want to import datetime, which is a python module for dates
@@ -24,16 +21,18 @@ now = datetime.datetime.now()
 cleese_age = now - born
 
 # Finally, print that variable.
-print cleese_age
+print(cleese_age)
 
 # Grab just the days :
-print "days John Cleese has been alive : ", cleese_age.days
+print("days John Cleese has been alive : ", cleese_age.days)
 
 # There is no hours data member, so let's multiply to find the hours :
-print "hours John Cleese has been alive : ", cleese_age.days * 24
+print("hours John Cleese has been alive : ", cleese_age.days * 24)
 
 # What will be the date in 1000 days from now?
 td = datetime.timedelta(days=1000)
 
 # Print it.
-print "in 1000 days it will be ", now + td  # this is a datetime object
+print("in 1000 days it will be ",
+      # this is a datetime object
+      now + td)
