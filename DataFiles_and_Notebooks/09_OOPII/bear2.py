@@ -4,7 +4,7 @@ class Bear:
     bear_num     = 0
     def __init__(self,name):
         self.name = name
-        print " made a bear called %s" % (name)
+        print(" made a bear called %s" % (name))
         self.logf  = open(Bear.logfile_name,"a")
         Bear.bear_num += 1
         self.created = datetime.datetime.now()
@@ -14,10 +14,10 @@ class Bear:
         self.logf.flush()
     
     def growl(self,nbeep=5):
-        print "\a"*nbeep
+        print("\a"*nbeep)
 
     def __del__(self):
-        print "Bang! %s is no longer." % self.name
+        print("Bang! %s is no longer." % self.name)
         self.logf.write("[%s] deleted bear #%i named %s\n" % \
                         (datetime.datetime.now(),self.my_num,self.name))
         self.logf.flush()
@@ -31,11 +31,3 @@ class Bear:
         age = datetime.datetime.now() - self.created
         return " name = %s bear (age %s) number = %i (population %i)" % \
                 (self.name, age, self.my_num,Bear.bear_num)
-        
-"""
-print Bear.__doc__
-print Bear.__name__
-print Bear.__module__
-print Bear.__bases__
-print Bear.__dict__
-"""
