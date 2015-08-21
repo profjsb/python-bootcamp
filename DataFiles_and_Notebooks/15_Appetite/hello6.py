@@ -46,7 +46,7 @@ def show_user_profile(username):
 @app.route('/tweet/<int:tweet_id>')
 def show_tweet(tweet_id):
     # show the tweet with the given id, the id is an integer
-    username = 'ivanov'
+    username = 'profjsb'
     user_url = url_for('show_user_profile', username=username)
     # We've hidden away the string logic in the file templates/tweet.html
     tweet_text = 'this is some test test #' + str(tweet_id) 

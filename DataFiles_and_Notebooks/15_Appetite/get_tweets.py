@@ -20,10 +20,10 @@ def search_tweets(q='#pyboot'):
     # Iterate through 5 more batches of results by following the cursor
 
     for _ in range(5):
-        print "Length of statuses", len(statuses)
+        print("Length of statuses", len(statuses))
         try:
             next_results = search_results['search_metadata']['next_results']
-        except KeyError, e: # No more results when next_results doesn't exist
+        except KeyError as e: # No more results when next_results doesn't exist
             break
             
         # Create a dictionary from next_results, which has the following form:

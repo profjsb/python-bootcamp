@@ -17,7 +17,7 @@ def show_user_profile(username):
 @app.route('/tweet/<int:tweet_id>')
 def show_tweet(tweet_id):
     # show the tweet with the given id, the id is an integer
-    username = 'ivanov'
+    username = 'profjsb'
     user_url = url_for('show_user_profile', username=username)
     link = '<a href="{url}">{text}</a>'
     s = link.format(url=user_url, text=username)

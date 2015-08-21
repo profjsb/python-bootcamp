@@ -1,9 +1,7 @@
-import urllib2
+import urllib
 import numpy.testing as npt
 
-
-
-url_instance= urllib2.urlopen('https://twitter.com/search?q=%23pyboot&mode=realtime')
+url_instance= urllib.request.urlopen('https://twitter.com/search?q=%23pyboot&mode=realtime')
 content = url_instance.read()
 url_instance.close()
 
@@ -17,8 +15,8 @@ def scrape_usernames_quick_and_dirty(content):
     #
     # Also, we should note that there are better ways of parsing out html
     # pages in Python. Have a look at 
-    at_marker = '<s>@</s><b>'
-    end_marker = '</b>'
+    at_marker = b'<s>@</s><b>'
+    end_marker = b'</b>'
     start = 0
     usernames = []
     while True:
@@ -39,24 +37,24 @@ def scrape_usernames_quick_and_dirty(content):
 
 def scrape_usernames_beautiful(content):
     try:
-        import BeautifulSoup
+        from bs4 import BeautifulSoup
     except ImportError:
-        raise("Sorry, you'll need to install BeautifulSoup to use this" ) 
-    soup = BeautifulSoup.BeautifulSoup(content)
+        raise Exception("Sorry, you'll need to install BeautifulSoup to use this")
+    soup = BeautifulSoup(content)
 
-    all_bs = [x.findParent().findNextSibling('b') for x in soup.findAll('s', text='@')]
+    all_bs = [x.findNext("b") for x in soup.findAll(b's', text=b'@')]
 
     usernames = []
     for b in all_bs:
         if len(b.contents) > 0:
             # twitter has some @ signs with no usernames on that page
-            usernames.append(b.contents[0])
+            usernames.append(bytes(b.contents[0],"utf-8"))
 
     return usernames
 
 def test_scrapers():
     "Verify that our two ways of getting usernames yields the same results" 
-    url_instance= urllib2.urlopen('https://twitter.com/search?q=%23pyboot&mode=realtime')
+    url_instance= urllib.request.urlopen('https://twitter.com/search?q=%23pyboot&mode=realtime')
     content = url_instance.read()
     url_instance.close()
 
@@ -64,4 +62,3 @@ def test_scrapers():
     names_beautiful = scrape_usernames_beautiful(content) 
 
     npt.assert_array_equal(names_quick, names_beautiful) 
-
