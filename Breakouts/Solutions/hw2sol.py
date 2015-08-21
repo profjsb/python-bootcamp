@@ -13,7 +13,7 @@ Usage:
   python hw2sol.py
 
 UC Berkeley 
-J. Bloom 2013 
+J. Bloom 2013 - 2015
 """
 import random
 import numpy as np
@@ -58,7 +58,7 @@ class Pawn(object):
 			# keep track of the path is took to get there
 			self.path.append(self.loc)
 
-			if board.has_key(self.loc):
+			if board.get(self.loc):
 				## new location due to chute or ladder
 				if self.loc > board[self.loc]:
 					self.n_chutes += 1
@@ -176,7 +176,7 @@ class Simulate(object):
 def test_Pawn():
 	p = Pawn()
 	p.play_till_end()
-	print p
+	print(p)
 
 def test_Game():
 	g = Game(4)
@@ -184,15 +184,16 @@ def test_Game():
 
 
 if __name__ == "__main__":
-	print "HW#2 solutions"
-	print "UC Berkeley Python Bootcamp 2013"
+	print("HW#2 solutions")
+	print("UC Berkeley Python Bootcamp 2013-2015")
 
 	nsim = 10000
 	for n_players in [2,4]:
-		print "*"*60
-		print "Running a 10000 game simulation with {0} players".format(n_players)
+		print("*"*60)
+		print("Running a {nsim} game simulation with {n_players} players".
+			   format(nsim=nsim,n_players=n_players))
 		s = Simulate(num_games =nsim, num_players=n_players)
 		s.run()
-		print s
+		print(s)
 
 
