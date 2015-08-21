@@ -1,15 +1,17 @@
 #! /usr/bin/env python
 # this file was originall written by Brad Cenko for 2012 UCB Python Bootcamp
 # modified and extended by Paul Ivanov for the 2013 UCB Python Bootcamp
+# modified and extended by Josh Bloom for the 2013 UCB Python Bootcamp
+
 
 import sqlite3, os, smtplib
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import NothingToSeeHere # Email password stored in this (private) file
 from NothingToSeeHere import username as email_addr
 
 # Global variables
-piDB = "piDB.sql"
+tennisDB = "tennisDB.sql"
 # Need to change this to a path you can write to
 
 import logging
@@ -18,28 +20,28 @@ log = logging.getLogger(__name__)
 
 ###########################################################################
 
-def create_friends_table(filename=piDB):
+def create_friends_table(filename=tennisDB):
 
     """Creates sqlite database to store basic information on my buddies"""
 
     conn = sqlite3.connect(filename)
     c = conn.cursor()
 
-    c.execute('''CREATE TABLE CYCLISTS (f_name text, l_name text,
+    c.execute('''CREATE TABLE TENNISFOLK (f_name text, l_name text,
                email text, status text)''')
 
-    ins_tpl= 'INSERT INTO CYCLISTS VALUES ("%s", "%s", "%s", "%s")'
+    ins_tpl= 'INSERT INTO TENNISFOLK VALUES ("%s", "%s", "%s", "%s")'
 
     l = []
-    l += [ins_tpl % ( "Paul", "Ivanov", email_addr, 'committed')]
-    l += [ins_tpl % ( "Dan", "Coates", email_addr, 'committed')]
-    l += [ins_tpl % ( "James", "Gao", email_addr, 'casual')]
-    l += [ins_tpl % ( "Sara", "Emery", email_addr, 'committed')]
-    l += [ins_tpl % ( "Jonathan", "Giffard", email_addr, 'weekender')]
-    l += [ins_tpl % ( "Janet", "Young", email_addr, 'weekender')]
+    l += [ins_tpl % ( "Josh", "Bloom", email_addr, 'committed')]
+    l += [ins_tpl % ( "Fernando", "Perez", email_addr, 'casual')]
+    l += [ins_tpl % ( "Stefan", "van der Walt", email_addr, 'casual')]
+    l += [ins_tpl % ( "Wayne", "Skeen", email_addr, 'casual')]
+    l += [ins_tpl % ( "Andre", "Agassi", email_addr, 'committed')]
+    l += [ins_tpl % ( "Rafael", "Nadal", email_addr, 'committed')]
 
     for s in l:
-        print s
+        print(s)
         c.execute(s)
 
     conn.commit()
@@ -49,14 +51,14 @@ def create_friends_table(filename=piDB):
 
 ############################################################################
 
-def retrieve_random_cyclist(filename=piDB, kind="committed"):
+def retrieve_random_tennis(filename=tennisDB, kind="committed"):
 
-    """Returns the name and email address of a random cyclist"""
+    """Returns the name and email address of a random tennis player"""
 
     conn = sqlite3.connect(filename)
     c = conn.cursor()
 
-    c.execute("SELECT f_name, l_name, email FROM CYCLISTS WHERE status" + \
+    c.execute("SELECT f_name, l_name, email FROM TENNISFOLK WHERE status" + \
               " = '%s' ORDER BY RANDOM() LIMIT 1" % kind)
     row = c.fetchall()
     
@@ -71,37 +73,23 @@ def retrieve_random_cyclist(filename=piDB, kind="committed"):
 
 ###############################################################################
 
-def email_cyclist(address, f_name, l_name, myemail=NothingToSeeHere.username):
+def email_tennis(address, f_name, l_name, myemail=NothingToSeeHere.username):
 
-    """Generate and send an email to address with a request to observe
-    the given supernova."""
+    """Generate and send an email to address """
     
     # Create the message
     msg = MIMEMultipart()
     msg["From"] = myemail
     msg["To"] = address
-    msg["Subject"] = "Let's go for a ride, %s" % f_name
+    msg["Subject"] = "Let's play tennis, %s" % f_name
 
     # Write the body, making sure all variables are defined.
     msgstr = r"""Hey %s,
 
-    Wanna go for a bike ride later on today?
+    Wanna hit on a campus court today?
 
     best,
-    pi
-    -- 
-                       _
-                      / \
-                    A*   \^   -
-                 ,./   _.`\\ / \
-                / ,--.S    \/   \
-               /  `"~,_     \    \
-         __o           ?
-       _ \<,_         /:\
-    --(_)/-(_)----.../ | \
-    --------------.......J
-    Paul Ivanov
-    http://pirsquared.org
+    josh
     """  % f_name
     msg.attach(MIMEText(msgstr))
 
@@ -120,8 +108,8 @@ def email_cyclist(address, f_name, l_name, myemail=NothingToSeeHere.username):
 
 ###############################################################################
     
-def go_cycling(filename=piDB, myemail=NothingToSeeHere.username):
-    """Script to go cycling with one of my cycling buddies.
+def play_tennis(filename=tennisDB, myemail=NothingToSeeHere.username):
+    """Script to play tennis with one of my tennis buddies.
     Grabs
     and emails that student to request follow-up observations."""
 
@@ -130,12 +118,12 @@ def go_cycling(filename=piDB, myemail=NothingToSeeHere.username):
         create_friends_table(filename=filename)
 
     # Select a random graduate student to do our bidding
-    [f_name, l_name, address] = retrieve_random_cyclist(filename=filename)
+    [f_name, l_name, address] = retrieve_random_tennis(filename=filename)
 
     # Email the student
-    email_cyclist(address, f_name, l_name, myemail=myemail)
+    email_tennis(address, f_name, l_name, myemail=myemail)
 
-    print "I emailed %s %s at %s about going cycling." % (f_name, l_name,
-                                                          address)
+    print("I emailed %s %s at %s about playing tennis." % (f_name, l_name,
+                                                          address))
 
 ###############################################################################
