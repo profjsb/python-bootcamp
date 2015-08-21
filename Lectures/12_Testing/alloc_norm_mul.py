@@ -38,7 +38,7 @@ def _matmul(A, B, out):
             out[i, j] = s
 
 
-@profile
+# @profile
 def alloc_norm_mul(A, B):
     """Take two matrices, A and B,
 
