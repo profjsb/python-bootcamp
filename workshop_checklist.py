@@ -91,6 +91,11 @@ def check_import(mname):
     print('MOD: {mname}, version: {vinfo}'.format(mname=mname,vinfo=vinfo))
 
 
+def test_py3():
+    "Test that we are using Python version 3 or greater"
+    assert sys.version_info.major > 2
+
+
 # Test generators are best written without docstrings, because nose can then
 # show the parameters being used.
 def test_imports():
