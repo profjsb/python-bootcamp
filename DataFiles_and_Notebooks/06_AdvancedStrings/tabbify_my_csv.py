@@ -4,6 +4,7 @@ small copy program that turns a csv file into a tabbed file
   PYTHON BOOT CAMP EXAMPLE; 
     created by Josh Bloom at UC Berkeley, 2010,2012 (ucbpythonclass+bootcamp@gmail.com)
 
+    Modified by Qingkai, Aug 2016
 """
 
 import os
@@ -26,3 +27,5 @@ OUTPUT: creates a file called outfilename
             outlines.append(l.replace(",","\t"))
     o.writelines(outlines) ; o.close()
 
+if __name__ == "__main__":
+    tabbify('./test.csv','./test.tab',ignore_comments=True,comment_chars="#;/")
