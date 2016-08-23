@@ -82,14 +82,14 @@ def do_operations(filename):
             # Write new line
             new_file.write(newline)
         
-    print 'There are %i occurances of astrology and %i occurances of physics' % \
-            (count_occurances(filename,'astrology'),count_occurances(filename,'physics'))
+    print('There are %i occurances of astrology and %i occurances of physics' % \
+            (count_occurances(filename,'astrology'),count_occurances(filename,'physics')))
     orig_file.close()
     new_file.close()
-    print 'Wrote %s' % (new_filename)
+    print('Wrote %s' % (new_filename))
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         do_operations(sys.argv[1])
     else:
-        print "dont know what to do with", repr(sys.argv[1:])
+        print("dont know what to do with", repr(sys.argv[1:]))
